@@ -11,6 +11,7 @@ export default function Board({notify}) {
   const [playButtonText, setPlayButtonText] = useState("Play")
   const [gameStarted, setGameStarted] = useState(false)
   const [showRestartButton, setShowRestartButton] = useState(false)
+  const [playerWon, setPlayerWon] = useState(false)
 
   useEffect(() => {
     function calculateWinner(list) {
@@ -26,6 +27,7 @@ export default function Board({notify}) {
 
     if(calculateWinner(squareList)){
       notify(winnerPlayerSignRef.current);
+      setPlayerWon(true)
       setPlayButtonText("Play Again")
       setShowRestartButton(true)
     }
@@ -55,6 +57,7 @@ export default function Board({notify}) {
     }else{
       setGameStarted(true);
       setSquareList(Array(9).fill('\u2060'));
+      setPlayerWon(false)
       setPlayButtonText("Game is on")
       setShowRestartButton(false)
       // setWinnerPlayerSign('')
@@ -79,9 +82,16 @@ export default function Board({notify}) {
         <Square value={squareList[7]} squareClick={()=>handleClick(7)} />
         <Square value={squareList[8]} squareClick={()=>handleClick(8)} />
       </div>
-      {<button className="playAgainButton" onClick={()=>{handlePlayButtonClick()}}>{playButtonText}{showRestartButton && <VscDebugRestart className="restartIcon"/>}</button>}
+      <div className="playButtonAndGif">
+        {<button className="playAgainButton" onClick={()=>{handlePlayButtonClick()}}>{playButtonText}{showRestartButton && <VscDebugRestart className="restartIcon"/>}</button>}
+        {playerWon && <img className="dance-gif" src={images[getRndInteger(0,4)]} alt="dance_gif"/>}
+      </div>
     </>
   );
+}
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
 const winPositionList = [
@@ -95,3 +105,10 @@ const winPositionList = [
   [2,4,6]
 ] 
 
+const images = [
+  require("../res/windance_gifs/dance1.gif"),
+  require("../res/windance_gifs/dance2.gif"),
+  require("../res/windance_gifs/dance3.gif"),
+  require("../res/windance_gifs/dance4.gif"),
+  require("../res/windance_gifs/dance5.gif")
+]
