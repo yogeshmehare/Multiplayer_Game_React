@@ -1,8 +1,6 @@
 import { useState,useEffect, useRef } from "react";
 import Square from "./Square";
 import { VscDebugRestart } from 'react-icons/vsc';
-import io from "socket.io-client";
-const socket = io.connect("http://localhost:3001/")
 
 export default function Board({notify}) {
   const [squareList, setSquareList] = useState(Array(9).fill('\u2060'));
@@ -64,16 +62,6 @@ export default function Board({notify}) {
       winnerPlayerSignRef.current = ''
     }
   }
-
-  var handleSquareClick = async() => {
-
-    await socket.emit("sendSquareDetails",{
-        firstPlayerTurn:firstPlayerTurn,
-        roomId:roomId,
-        message:messageToSend.text,
-        time:messageToSend.date
-    })
-}
   
   return (
     <>
